@@ -6,6 +6,10 @@ class Application
 {
     public function run()
     {
-        echo 'application run';
+        $request = new Request();
+
+        $path = $request->getPath();
+
+        echo 'application run with path "' . $path . '"';
     }
 }
