@@ -13,5 +13,8 @@
         "psr-4": {
             "memclutter\\PhpTodo\\": "src/"
         }
+    },
+    "scripts": {
+        "runserver": "php -t www -S localhost:8080"
     }
 }

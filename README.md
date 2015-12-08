@@ -22,5 +22,7 @@ return [
 Run local webserver.
 ```sh
 php -t www -S localhost:8080
+# or
+composer runserver
 ```
 See http://localhost:8080.
