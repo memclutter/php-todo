@@ -8,6 +8,10 @@ trait ContainerTrait
 
     public function __get($name)
     {
+        if (isset($this->_container[$name]) && ($this->_container[$name] instanceof \Closure)) {
+            $factory = $this->_container[$name];
+            $this->_container[$name] = $factory($this);
+        }
         return isset($this->_container[$name]) ? $this->_container[$name] : null;
     }
 
@@ -30,6 +34,10 @@ trait ContainerTrait
 
     public function get($name, $default = null)
     {
+        if (isset($this->_container[$name]) && ($this->_container[$name] instanceof \Closure)) {
+            $factory = $this->_container[$name];
+            $this->_container[$name] = $factory($this);
+        }
         return isset($this->_container[$name]) ? $this->_container[$name] : $default;
     }
 

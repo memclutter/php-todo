@@ -2,12 +2,15 @@
 
 namespace memclutter\PhpTodo;
 
+use PDO;
+
 /**
  * Class Application
  *
  * @property Request $request
  * @property Response $response
  * @property array $config
+ * @property PDO $pdo
  */
 class Application
 {
@@ -34,6 +37,8 @@ class Application
             $environmentConfig = require(APP_ROOT . DIRECTORY_SEPARATOR . 'config.' . $environment . '.php');
             $this->config = Utils::arrayMerge($this->config, $environmentConfig);
         }
+
+        $this->initPdo();
     }
 
     public function run()
@@ -43,5 +48,21 @@ class Application
         $content = sprintf('application run with path "%s".<br>config data <pre>%s</pre>', $path, print_r($this->config, true));
         $this->response = new Response(200, $content);
         $this->response->send();
+    }
+
+    private function initPdo()
+    {
+        $this->pdo = function(Application $application) {
+            $config = isset($application->config) && isset($application->config['pdo']) ? $application->config['pdo'] : null;
+            if (!$config) {
+                throw new Exception('Invalid pdo configuration.');
+            }
+
+            $config['username'] = isset($config['username']) ? $config['username'] : '';
+            $config['passwd'] = isset($config['passwd']) ? $config['passwd'] : '';
+            $config['options'] = isset($config['options']) ? $config['options'] : '';
+
+            return new PDO($config['dsn'], $config['username'], $config['passwd'], $config['options']);
+        };
     }
 }
