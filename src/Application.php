@@ -2,17 +2,22 @@
 
 namespace memclutter\PhpTodo;
 
+/**
+ * Class Application
+ *
+ * @property Request $request
+ * @property Response $response
+ */
 class Application
 {
+    use ContainerTrait, SingletonTrait;
+
     public function run()
     {
-        $request = new Request();
-
-        $path = $request->getPath();
-
+        $this->request = new Request();
+        $path = $this->request->getPath();
         $content = sprintf('application run with path "%s"', $path);
-        $response = new Response(200, $content);
-
-        $response->send();
+        $this->response = new Response(200, $content);
+        $this->response->send();
     }
 }
