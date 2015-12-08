@@ -10,6 +10,9 @@ class Application
 
         $path = $request->getPath();
 
-        echo 'application run with path "' . $path . '"';
+        $content = sprintf('application run with path "%s"', $path);
+        $response = new Response(200, $content);
+
+        $response->send();
     }
 }
