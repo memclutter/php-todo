@@ -1,0 +1,17 @@
+{
+    "name": "memclutter/php-todo",
+    "description": "Pure PHP todo application",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Memory Clutter",
+            "email": "memclutter@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "memclutter\\PhpTodo\\": "src/"
+        }
+    }
+}
