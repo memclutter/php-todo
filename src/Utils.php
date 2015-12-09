@@ -5,6 +5,16 @@ namespace memclutter\PhpTodo;
 class Utils
 {
     /**
+     * @param $path
+     * @return string
+     */
+    public static function normalizeFilePath($path)
+    {
+        $path = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+        return trim($path, DIRECTORY_SEPARATOR);
+    }
+
+    /**
      * @param $a
      * @param $b
      * @return mixed

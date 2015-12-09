@@ -45,12 +45,9 @@ class Application
     {
         $this->request = new Request();
         $todoList = Todo::findAll();
-        $itemTemplate = "<pre>%s</pre>\n";
-        $content = '<p>Todo list</p>';
-        foreach ($todoList as $todo) {
-            /* @var \memclutter\PhpTodo\Todo $todo */
-            $content .= sprintf($itemTemplate, print_r($todo->toArray(), true));
-        }
+        $template = new Template();
+        $template->set('todoList', $todoList);
+        $content = $template->render('index.tpl.php');
         $this->response = new Response(200, $content);
         $this->response->send();
     }
