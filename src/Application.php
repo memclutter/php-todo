@@ -47,8 +47,7 @@ class Application
     {
         $this->request = new Request();
         $this->router = new Router();
-        $this->controller = $this->router->dispatch($this->request);
-        $this->response = $this->controller->run();
+        $this->response = $this->router->dispatch($this->request);
         $this->response->send();
     }
 
