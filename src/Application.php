@@ -11,6 +11,8 @@ use PDO;
  * @property Response $response
  * @property array $config
  * @property PDO $pdo
+ * @property Router $router
+ * @property Controller $controller
  */
 class Application
 {
@@ -44,11 +46,9 @@ class Application
     public function run()
     {
         $this->request = new Request();
-        $todoList = Todo::findAll();
-        $template = new Template();
-        $template->set('todoList', $todoList);
-        $content = $template->render('index.tpl.php');
-        $this->response = new Response(200, $content);
+        $this->router = new Router();
+        $this->controller = $this->router->dispatch($this->request);
+        $this->response = $this->controller->run();
         $this->response->send();
     }
 
