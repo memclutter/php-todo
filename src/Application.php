@@ -44,8 +44,13 @@ class Application
     public function run()
     {
         $this->request = new Request();
-        $path = $this->request->getPath();
-        $content = sprintf('application run with path "%s".<br>config data <pre>%s</pre>', $path, print_r($this->config, true));
+        $todoList = Todo::findAll();
+        $itemTemplate = "<pre>%s</pre>\n";
+        $content = '<p>Todo list</p>';
+        foreach ($todoList as $todo) {
+            /* @var \memclutter\PhpTodo\Todo $todo */
+            $content .= sprintf($itemTemplate, print_r($todo->toArray(), true));
+        }
         $this->response = new Response(200, $content);
         $this->response->send();
     }

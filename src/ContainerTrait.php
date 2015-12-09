@@ -58,4 +58,9 @@ trait ContainerTrait
             unset($this->_container[$name]);
         }
     }
+
+    public function toArray()
+    {
+        return $this->_container;
+    }
 }
