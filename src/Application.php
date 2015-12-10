@@ -12,6 +12,7 @@ use PDO;
  * @property array $config
  * @property PDO $pdo
  * @property Router $router
+ * @property Layout $layout
  */
 class Application
 {
@@ -41,6 +42,7 @@ class Application
 
         $this->initPdo();
         $this->initRouter();
+        $this->initLayout();
     }
 
     public function run()
@@ -75,6 +77,30 @@ class Application
             $controllerNamespace = isset($config['controllerNamespace']) ? $config['controllerNamespace'] : null;
 
             return new Router($routes, $defaultRoute, $controllerNamespace);
+        };
+    }
+
+    private function initLayout()
+    {
+        $this->layout = function(Application $application) {
+            $config = isset($application->config) ? $application->config : [];
+            $name = isset($config['layout']) ? $config['layout'] : null;
+
+            if (!isset($config['layoutDir'])) {
+                throw new Exception('Invalid config, missing \'layoutDir\'.');
+            }
+
+            $layoutDir = $config['layoutDir'];
+            if (!file_exists($layoutDir)) {
+                throw new Exception("Layout dir '{$layoutDir}' not found.");
+            }
+
+            $layout = new Layout($layoutDir);
+            if (!empty($name)) {
+                $layout->name = $name;
+            }
+
+            return $layout;
         };
     }
 }

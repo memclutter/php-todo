@@ -9,6 +9,8 @@ return [
         ],
     ],
     'templateDir' => APP_ROOT . DIRECTORY_SEPARATOR . 'template',
+    'layoutDir' => APP_ROOT . DIRECTORY_SEPARATOR . 'layout',
+    'layout' => 'main.tpl.php',
     'defaultRoute' => 'todo',
     'controllerNamespace' => 'controller\\',
     'routes' => [

@@ -31,7 +31,7 @@ class Template
 
     public function getTemplateDir()
     {
-        $config = $this->getConfig();
+        $config = $this->config();
         if (!isset($config['templateDir'])) {
             throw new Exception('Invalid configuration, missing "templateDir" param.');
         }
@@ -48,17 +48,25 @@ class Template
     }
 
     /**
+     * @return Layout
+     */
+    public function layout()
+    {
+        return $this->application()->layout;
+    }
+
+    /**
      * @return array
      */
-    public function getConfig()
+    public function config()
     {
-        return $this->getApplication()->config;
+        return $this->application()->config;
     }
 
     /**
      * @return Application
      */
-    public function getApplication()
+    public function application()
     {
         return Application::getInstance();
     }

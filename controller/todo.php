@@ -17,7 +17,8 @@ class todo extends Controller
     {
         $template = new Template();
         $template->set('items', TodoActiveRecord::findAll());
-        $content = $template->render('index.tpl.php');
+        $template->layout()->content = $template->render('index.tpl.php');
+        $content = $template->layout()->render();
         return new Response(200, $content);
     }
 
@@ -35,14 +36,16 @@ class todo extends Controller
 
         $template = new Template();
         $template->set('item', $item);
-        $content = $template->render('view.tpl.php');
+        $template->layout()->content = $template->render('view.tpl.php');
+        $content = $template->layout()->render();
         return new Response(200, $content);
     }
 
     public function createAction()
     {
         $template = new Template();
-        $content = $template->render('create.tpl.php');
+        $template->layout()->content = $template->render('create.tpl.php');
+        $content = $template->layout()->render();
         return new Response(200, $content);
     }
 
@@ -55,7 +58,8 @@ class todo extends Controller
 
         $template = new Template();
         $template->set('item', $item);
-        $content = $template->render('update.tpl.php');
+        $template->layout()->content = $template->render('update.tpl.php');
+        $content = $template->layout()->render();
         return new Response(200, $content);
     }
 
