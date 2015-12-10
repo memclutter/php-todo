@@ -16,15 +16,15 @@ return [
             'pattern' => 'todo',
             'controller' => 'todo',
         ],
-        'todoView' => [
-            'pattern' => 'todo/:id',
-            'controller' => 'todo',
-            'action' => 'view',
-        ],
         'todoCreate' => [
             'pattern' => 'todo/create',
             'controller' => 'todo',
             'action' => 'create',
+        ],
+        'todoView' => [
+            'pattern' => 'todo/:id',
+            'controller' => 'todo',
+            'action' => 'view',
         ],
         'todoUpdate' => [
             'pattern' => 'todo/:id/update',
