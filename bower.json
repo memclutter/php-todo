@@ -1,0 +1,12 @@
+{
+  "name": "todo",
+  "version": "0.0.0",
+  "homepage": "https://github.com/memclutter/php-todo",
+  "authors": [
+    "Memory Clutter <memclutter@gmail.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "~3.3.6"
+  }
+}
