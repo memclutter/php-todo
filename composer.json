@@ -11,7 +11,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "memclutter\\PhpTodo\\": "src/"
+            "memclutter\\PhpTodo\\": "src/",
+            "controller\\": "controller/"
         }
     },
     "scripts": {
