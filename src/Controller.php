@@ -19,7 +19,8 @@ class Controller
     {
         $actionMethod = $action . 'Action';
         if (!method_exists($this, $actionMethod)) {
-            throw new Exception("Not found action {$action}.");
+            $controller = get_class($this);
+            return new Response(404, "Not found controller action {$controller}::{$action}.");
         }
 
         $callActionArguments = [];
@@ -38,6 +39,10 @@ class Controller
             }
         }
 
-        return $reflectionMethod->invokeArgs($this, $callActionArguments);
+        $response = $reflectionMethod->invokeArgs($this, $callActionArguments);
+        if (!($response instanceof Response)) {
+            $response = new Response();
+        }
+        return $response;
     }
 }

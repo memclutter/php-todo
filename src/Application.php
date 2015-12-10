@@ -11,6 +11,7 @@ use PDO;
  * @property Response $response
  * @property array $config
  * @property PDO $pdo
+ * @property Router $router
  */
 class Application
 {
@@ -39,16 +40,13 @@ class Application
         }
 
         $this->initPdo();
+        $this->initRouter();
     }
 
     public function run()
     {
         $this->request = new Request();
-        $todoList = Todo::findAll();
-        $template = new Template();
-        $template->set('todoList', $todoList);
-        $content = $template->render('index.tpl.php');
-        $this->response = new Response(200, $content);
+        $this->response = $this->router->run($this->request);
         $this->response->send();
     }
 
@@ -65,6 +63,18 @@ class Application
             $config['options'] = isset($config['options']) ? $config['options'] : '';
 
             return new PDO($config['dsn'], $config['username'], $config['passwd'], $config['options']);
+        };
+    }
+
+    private function initRouter()
+    {
+        $this->router = function(Application $application) {
+            $config = isset($application->config) ? $application->config : [];
+            $routes = isset($config['routes']) ? $config['routes'] : null;
+            $defaultRoute = isset($config['defaultRoute']) ? $config['defaultRoute'] : null;
+            $controllerNamespace = isset($config['controllerNamespace']) ? $config['controllerNamespace'] : null;
+
+            return new Router($routes, $defaultRoute, $controllerNamespace);
         };
     }
 }
