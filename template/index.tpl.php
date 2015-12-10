@@ -5,7 +5,7 @@
 <h1>todo list</h1>
 <ul>
     <?php foreach ($items as $item): ?>
-        <li>#<?= $item->id ?>: <?= $item->text ?></li>
+        <li><a href="<?= $this->getApplication()->router->reverse('todoView', ['id' => $item->id]) ?>"><?= $item->text ?></a></li>
     <?php endforeach ?>
 </ul>
 

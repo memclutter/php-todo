@@ -109,4 +109,23 @@ class Router
         $controller = new $controllerClass();
         return $controller->run($action, $params);
     }
+
+    public function reverse($route, $params = null)
+    {
+        if (!is_array($params)) {
+            $params = [];
+        }
+
+        if (!isset($this->routes[$route])) {
+            throw new Exception("Reverse route error, not found route '{$route}'.");
+        }
+
+        return preg_replace_callback('/\:([a-z0-9\-_]+)/i', function($matches) use ($params) {
+            if (!isset($params[$matches[1]])) {
+                throw new Exception("Reverse route error, missing '{$matches[1]}' parameter.");
+            }
+
+            return $params[$matches[1]];
+        }, $this->routes[$route]['pattern']);
+    }
 }
