@@ -120,12 +120,14 @@ class Router
             throw new Exception("Reverse route error, not found route '{$route}'.");
         }
 
-        return preg_replace_callback('/\:([a-z0-9\-_]+)/i', function($matches) use ($params) {
+        $url = preg_replace_callback('/\:([a-z0-9\-_]+)/i', function($matches) use ($params) {
             if (!isset($params[$matches[1]])) {
                 throw new Exception("Reverse route error, missing '{$matches[1]}' parameter.");
             }
 
             return $params[$matches[1]];
         }, $this->routes[$route]['pattern']);
+
+        return '/'.$url;
     }
 }
