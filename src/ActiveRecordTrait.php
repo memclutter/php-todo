@@ -67,6 +67,25 @@ trait ActiveRecordTrait
         }
     }
 
+    public function delete()
+    {
+        $primaryKey = $this->primaryKey();
+        $primaryKeyValue = $this->{$primaryKey};
+
+        if (!$primaryKeyValue) {
+            $pdo = $this->getPdo();
+
+            $tableName = $this->tableName();
+            $statement = $pdo->prepare("DELETE FROM {$tableName} WHERE {$primaryKey} = :{$primaryKey}");
+            $statement->bindValue(':' . $primaryKey, $primaryKeyValue);
+
+            if (false === $statement->execute()) {
+                $errorInfo = $statement->errorInfo();
+                throw new Exception("PDO [{$errorInfo[0]}]: {$errorInfo[2]}.");
+            }
+        }
+    }
+
     private function create()
     {
         $pdo = $this->getPdo();

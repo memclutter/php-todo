@@ -108,7 +108,12 @@ class todo extends Controller
         }
 
         // todo: delete active record
-        return new Response(303, '', ['Location: /' . Application::getInstance()->router->reverse('todoIndex')]);
+        $item->delete();
+
+        $location = Application::getInstance()
+            ->router
+            ->reverse('todoIndex');
+        return new Response(307, '', ["Location: $location"]);
     }
 
     private function validate($values, &$errors)
