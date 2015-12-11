@@ -2,8 +2,28 @@
 
 namespace memclutter\PhpTodo;
 
+/**
+ * Class Request
+ * @package memclutter\PhpTodo
+ *
+ * @property array $postParams
+ */
 class Request
 {
+    use ContainerTrait;
+
+    public function __construct()
+    {
+        $this->postParams = function() {
+            return is_array($_POST) ? $_POST : [];
+        };
+    }
+
+    public function isPost()
+    {
+        return !empty($_POST);
+    }
+
     public function getPath()
     {
         if (isset($_SERVER['PATH_INFO'])) {
