@@ -58,6 +58,68 @@ trait ActiveRecordTrait
         return $activeRecords;
     }
 
+    public function save()
+    {
+        if (!$this->{$this->primaryKey()}) {
+            $this->create();
+        } else {
+            $this->update();
+        }
+    }
+
+    private function create()
+    {
+        $pdo = $this->getPdo();
+        $fields = $this->toArray();
+        $fieldsKeys = array_keys($fields);
+        $into = implode(', ', $fieldsKeys);
+        $placeholders = implode(', ', array_map(function($v) { return ':'.$v; }, $fieldsKeys));
+
+        $tableName = $this->tableName();
+        $statement = $pdo->prepare("INSERT INTO {$tableName} ($into) VALUES ($placeholders)");
+        foreach ($fields as $field => $value) {
+            $statement->bindValue(':'.$field, $value);
+        }
+
+        if (!$statement->execute()) {
+            $errorInfo = $statement->errorInfo();
+            throw new Exception("PDO [{$errorInfo[0]}]: {$errorInfo[1]}.");
+        }
+
+        $lastInsertId = $pdo->lastInsertId();
+        if ($lastInsertId) {
+            $this->{$this->primaryKey()} = $lastInsertId;
+        }
+    }
+
+    private function update()
+    {
+        $primaryKey = $this->primaryKey();
+        $primaryKeyValue = $this->{$primaryKey};
+
+        $pdo = $this->getPdo();
+        $fields = $this->toArray();
+        $set = [];
+        foreach ($fields as $field => $value) {
+            if ($field != $primaryKey) {
+                $set[] = "$field = :{$field}";
+            }
+        }
+        $set = implode(', ', $set);
+
+        $tableName = $this->tableName();
+        $statement = $pdo->prepare("UPDATE {$tableName} {$set} WHERE {$primaryKey} = :primary_key");
+        foreach ($fields as $field => $value) {
+            $statement->bindValue(':'.$field, $value);
+        }
+        $statement->bindValue(':primary_key', $primaryKeyValue);
+
+        if (!$statement->execute()) {
+            $errorInfo = $statement->errorInfo();
+            throw new Exception("PDO [{$errorInfo[0]}]: {$errorInfo[1]}.");
+        }
+    }
+
     public static function primaryKey()
     {
         return 'id';
