@@ -16,14 +16,14 @@ class Todo
 {
     use ActiveRecordTrait;
 
-    const STATUS_NEW = 0;
-    const STATUS_ACTIVE = 2;
-    const STATUS_FINISH = 4;
+    const STATUS_NEW = 2;
+    const STATUS_ACTIVE = 4;
+    const STATUS_FINISH = 8;
 
-    const PRIORITY_LOW = 0;
-    const PRIORITY_NORMAL = 2;
-    const PRIORITY_HIGH = 4;
-    const PRIORITY_CRITICAL = 8;
+    const PRIORITY_LOW = 2;
+    const PRIORITY_NORMAL = 4;
+    const PRIORITY_HIGH = 8;
+    const PRIORITY_CRITICAL = 16;
 
     /**
      * @param null|int $status
