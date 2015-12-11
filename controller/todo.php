@@ -44,7 +44,8 @@ class todo extends Controller
     public function createAction()
     {
         $template = new Template();
-        $template->layout()->content = $template->render('create.tpl.php');
+        $template->set('caption', 'Create todo');
+        $template->layout()->content = $template->render('form.tpl.php');
         $content = $template->layout()->render();
         return new Response(200, $content);
     }
@@ -57,8 +58,9 @@ class todo extends Controller
         }
 
         $template = new Template();
+        $template->set('caption', 'Update todo #' . $item->id);
         $template->set('item', $item);
-        $template->layout()->content = $template->render('update.tpl.php');
+        $template->layout()->content = $template->render('form.tpl.php');
         $content = $template->layout()->render();
         return new Response(200, $content);
     }
