@@ -48,7 +48,15 @@ class todo extends Controller
         $errors = [];
 
         if ($request->isPost() && $this->validate($values, $errors)) {
-            // todo create record
+            $todo = new TodoActiveRecord();
+            $todo->fromArray($values);
+            $todo->created = date('Y-m-d H:i:s');
+            $todo->save();
+
+            $location = Application::getInstance()
+                ->router
+                ->reverse('todoIndex');
+            return new Response(307, '', ["Location: $location"]);
         }
 
         $template = new Template();
@@ -72,7 +80,14 @@ class todo extends Controller
         $errors = [];
 
         if ($request->isPost() && $this->validate($values, $errors)) {
-            // todo update record
+            $item->fromArray($values);
+            $item->updated = date('Y-m-d H:i:s');
+            $item->save();
+
+            $location = Application::getInstance()
+                ->router
+                ->reverse('todoView', ['id' => $item->id]);
+            return new Response(307, '', ["Location: $location"]);
         }
 
         $template = new Template();

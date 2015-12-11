@@ -43,7 +43,7 @@ trait ActiveRecordTrait
         $statement = $pdo->prepare("SELECT * FROM {$tableName}");
         if (!$statement->execute()) {
             $errorInfo = $statement->errorInfo();
-            throw new Exception("PDO [{$errorInfo[0]}]: {$errorInfo[1]}.");
+            throw new Exception("PDO [{$errorInfo[0]}]: {$errorInfo[2]}.");
         }
 
         $activeRecords = [];
@@ -83,7 +83,7 @@ trait ActiveRecordTrait
 
         if (!$statement->execute()) {
             $errorInfo = $statement->errorInfo();
-            throw new Exception("PDO [{$errorInfo[0]}]: {$errorInfo[1]}.");
+            throw new Exception("PDO [{$errorInfo[0]}]: {$errorInfo[2]}.");
         }
 
         $lastInsertId = $pdo->lastInsertId();
@@ -108,11 +108,13 @@ trait ActiveRecordTrait
         $set = implode(', ', $set);
 
         $tableName = $this->tableName();
-        $statement = $pdo->prepare("UPDATE {$tableName} {$set} WHERE {$primaryKey} = :primary_key");
+        $statement = $pdo->prepare("UPDATE {$tableName} SET {$set} WHERE {$primaryKey} = :{$primaryKey}");
         foreach ($fields as $field => $value) {
-            $statement->bindValue(':'.$field, $value);
-        }
-        $statement->bindValue(':primary_key', $primaryKeyValue);
+            if ($field != $primaryKey) {
+                $statement->bindValue(':' . $field, $value);
+            }
+        };
+        $statement->bindValue(':'.$primaryKey, $primaryKeyValue);
 
         if (!$statement->execute()) {
             $errorInfo = $statement->errorInfo();

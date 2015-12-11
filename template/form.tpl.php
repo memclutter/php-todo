@@ -65,7 +65,7 @@ $hasClass['priority'] = !empty($errors['priority']) ? ' has-error' : ($values['p
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <input type="reset" class="btn btn-default" value="Reset">
-                    <input type="submit" class="btn btn-default" value="Create">
+                    <input type="submit" class="btn btn-default" value="<?= $item ? 'Update' : 'Create' ?>">
                 </div>
             </div>
         </form>

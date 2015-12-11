@@ -59,6 +59,13 @@ trait ContainerTrait
         }
     }
 
+    public function fromArray(array $array)
+    {
+        foreach ($array as $key => $value) {
+            $this->_container[$key] = $value;
+        }
+    }
+
     public function toArray()
     {
         return $this->_container;
