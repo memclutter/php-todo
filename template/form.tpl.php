@@ -40,8 +40,9 @@ $hasClass['priority'] = !empty($errors['priority']) ? ' has-error' : ($values['p
                 <label for="status" class="col-sm-2 control-label">Status</label>
                 <div class="col-sm-10">
                     <select id="status" name="status" class="form-control">
+                        <option<?= $values['status'] === null ? ' selected' : '' ?>></option>
                         <?php foreach ($statusLabels as $status => $statusLabel): ?>
-                            <?php $selected = ($status == $values['status']) ? ' selected' : '' ?>
+                            <?php $selected = ($status === $values['status']) ? ' selected' : '' ?>
                             <option value="<?= $status ?>"<?= $selected ?>><?= $statusLabel ?></option>
                         <?php endforeach ?>
                     </select>
@@ -52,8 +53,9 @@ $hasClass['priority'] = !empty($errors['priority']) ? ' has-error' : ($values['p
                 <label for="priority" class="col-sm-2 control-label">Priority</label>
                 <div class="col-sm-10">
                     <select id="priority" name="priority" class="form-control">
+                        <option<?= $values['priority'] === null ? ' selected' : '' ?>></option>
                         <?php foreach ($priorityLabels as $priority => $priorityLabel): ?>
-                            <?php $selected = ($priority == $values['priority']) ? ' selected' : '' ?>
+                            <?php $selected = ($priority === $values['priority']) ? ' selected' : '' ?>
                             <option value="<?= $priority ?>"<?= $selected ?>><?= $priorityLabel ?></option>
                         <?php endforeach ?>
                     </select>
