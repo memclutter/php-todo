@@ -43,8 +43,18 @@ class todo extends Controller
 
     public function createAction()
     {
+        $request = Application::getInstance()->request;
+        $values = $request->postParams;
+        $errors = [];
+
+        if ($request->isPost() && $this->validate($values, $errors)) {
+            // todo create record
+        }
+
         $template = new Template();
         $template->set('caption', 'Create todo');
+        $template->set('values', $values);
+        $template->set('errors', $errors);
         $template->layout()->content = $template->render('form.tpl.php');
         $content = $template->layout()->render();
         return new Response(200, $content);
@@ -57,8 +67,18 @@ class todo extends Controller
             return new Response(404, "Todo item by ID {$id} not found.");
         }
 
+        $request = Application::getInstance()->request;
+        $values = $request->postParams;
+        $errors = [];
+
+        if ($request->isPost() && $this->validate($values, $errors)) {
+            // todo update record
+        }
+
         $template = new Template();
         $template->set('caption', 'Update todo #' . $item->id);
+        $template->set('values', $values);
+        $template->set('errors', $errors);
         $template->set('item', $item);
         $template->layout()->content = $template->render('form.tpl.php');
         $content = $template->layout()->render();
@@ -74,5 +94,29 @@ class todo extends Controller
 
         // todo: delete active record
         return new Response(303, '', ['Location: /' . Application::getInstance()->router->reverse('todoIndex')]);
+    }
+
+    private function validate($values, &$errors)
+    {
+        $statuses = TodoActiveRecord::statusLabels();
+        $priorities = TodoActiveRecord::priorityLabels();
+
+        if (!isset($values['text']) || empty($values['text'])) {
+            $errors['text'] = 'Text required';
+        }
+
+        if (!isset($values['status']) || ($values['status'] === null) || ($values['status'] === '')) {
+            $errors['status'] = 'Status required';
+        } elseif (!isset($statuses[$values['status']])) {
+            $errors['status'] = "Unknown status {$values['status']}.";
+        }
+
+        if (!isset($values['priority']) || ($values['priority'] === null) || ($values['priority'] === '')) {
+            $errors['priority'] = 'Priority required';
+        } elseif (!isset($priorities[$values['priority']])) {
+            $errors['priority'] = "Unknown priority {$values['priority']}.";
+        }
+
+        return count($errors) == 0;
     }
 }
