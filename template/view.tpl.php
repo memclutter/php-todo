@@ -26,11 +26,11 @@
         </tr>
         <tr>
             <th>Status</th>
-            <td><?= $item->status ?></td>
+            <td><?= $item->statusLabels($item->status) ?></td>
         </tr>
         <tr>
             <th>Priority</th>
-            <td><?= $item->priority ?></td>
+            <td><?= $item->priorityLabels($item->priority) ?></td>
         </tr>
         <tr>
             <th>Created</th>

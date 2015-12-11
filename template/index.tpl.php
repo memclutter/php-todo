@@ -19,8 +19,8 @@
             <tr>
                 <td><?= $item->id ?></td>
                 <td><?= $item->text ?></td>
-                <td><?= $item->status ?></td>
-                <td><?= $item->priority ?></td>
+                <td><?= $item->statusLabels($item->status) ?></td>
+                <td><?= $item->priorityLabels($item->priority) ?></td>
                 <td>
                     <a title="View" href="<?= $this->application()->router->reverse('todoView', ['id' => $item->id]) ?>">
                         <span class="glyphicon glyphicon-eye-open text-success"></span>
