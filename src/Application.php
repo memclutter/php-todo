@@ -13,6 +13,7 @@ use PDO;
  * @property PDO $pdo
  * @property Router $router
  * @property Layout $layout
+ * @property Logger $logger
  */
 class Application
 {
@@ -40,6 +41,7 @@ class Application
             $this->config = Utils::arrayMerge($this->config, $environmentConfig);
         }
 
+        $this->initLogger();
         $this->initPdo();
         $this->initRouter();
         $this->initLayout();
@@ -47,6 +49,7 @@ class Application
 
     public function run()
     {
+        $this->logger->i('Application run');
         $this->request = new Request();
         $this->response = $this->router->run($this->request);
         $this->response->send();
@@ -101,6 +104,20 @@ class Application
             }
 
             return $layout;
+        };
+    }
+
+    private function initLogger()
+    {
+        $this->logger = function(Application $application) {
+            $config = $application->config;
+
+            $targetFile = isset($config['logTargetFile']) ? $config['logTargetFile'] : null;
+            $level = isset($config['logLevel']) ? $config['logLevel'] : null;
+            $dateFormat = isset($config['logDateFormat']) ? $config['logDateFormat'] : null;
+            $lineFormat = isset($config['logLineFormat']) ? $config['logLineFormat'] : null;
+
+            return new Logger($targetFile, $level, $dateFormat, $lineFormat);
         };
     }
 }
