@@ -49,7 +49,7 @@ class Application
 
     public function run()
     {
-        $this->logger->i('Application run');
+        $this->logger->i('APPLICATION', 'Application run');
         $this->request = new Request();
         $this->response = $this->router->run($this->request);
         $this->response->send();

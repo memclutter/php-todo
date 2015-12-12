@@ -6,10 +6,10 @@ namespace memclutter\PhpTodo;
  * Class Logger
  * @package memclutter\PhpTodo
  *
- * @method void e(string $message) write error message.
- * @method void w(string $message) write warning message.
- * @method void i(string $message) write info message.
- * @method void d(string $message) write debug message.
+ * @method void e(string $category, string $message) write error message.
+ * @method void w(string $category, string $message) write warning message.
+ * @method void i(string $category, string $message) write info message.
+ * @method void d(string $category, string $message) write debug message.
  */
 class Logger
 {
@@ -21,7 +21,7 @@ class Logger
     private $_targetFile;
     private $_level;
     private $_dateFormat = 'Y-m-d H:i:s';
-    private $_lineFormat = "[{date}][{ip}] {message}\n";
+    private $_lineFormat = "[{date}][{ip}][{category}] {message}\n";
 
     public static function availableLevels()
     {
@@ -75,15 +75,16 @@ class Logger
 
     public function __call($name, $arguments)
     {
-        $message = isset($arguments[0]) ? $arguments[0] : '';
+        $category = isset($arguments[0]) ? $arguments[0] : 'application';
+        $message = isset($arguments[1]) ? $arguments[1] : '';
         $availableLevels = $this->availableLevels();
         if (!isset($availableLevels[$name])) {
-            throw new Exception("Unknown log level alias '{$name}', for send message '{$message}'.");
+            throw new Exception("Unknown log level alias '{$name}', for send message '{$message}' in category '{$category}'.");
         }
-        $this->write($message, $availableLevels[$name]);
+        $this->write($category, $message, $availableLevels[$name]);
     }
 
-    public function write($message, $level = self::LEVEL_ERROR)
+    public function write($category, $message, $level = self::LEVEL_ERROR)
     {
         if ($this->isAllowLevel($level)) {
             if (is_array($message)) {
@@ -103,6 +104,7 @@ class Logger
             $line = strtr($this->_lineFormat, [
                 '{date}' => $date,
                 '{ip}' => $ip,
+                '{category}' => $category,
                 '{message}' => $message,
             ]);
             $this->writeToFile($line);
