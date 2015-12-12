@@ -21,7 +21,7 @@ class Logger
     private $_targetFile;
     private $_level;
     private $_dateFormat = 'Y-m-d H:i:s';
-    private $_lineFormat = "[{date}][{ip}][{category}] {message}\n";
+    private $_lineFormat = "[{date}] - {ip} - {level} - {category} - {message}\n";
 
     public static function availableLevels()
     {
@@ -104,6 +104,7 @@ class Logger
             $line = strtr($this->_lineFormat, [
                 '{date}' => $date,
                 '{ip}' => $ip,
+                '{level}' => $level,
                 '{category}' => $category,
                 '{message}' => $message,
             ]);
