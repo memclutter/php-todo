@@ -71,6 +71,8 @@ class Logger
         if ($lineFormat != null) {
             $this->_logLineFormat = $lineFormat;
         }
+
+        $this->writeToFile("\n");
     }
 
     public function __call($name, $arguments)
@@ -90,9 +92,9 @@ class Logger
             if (is_array($message)) {
                 if (isset($message[0])) {
                     $pairs = $message;
-                    $message = $message[0];
+                    $string = $message[0];
                     unset($message[0]);
-                    $message = strtr($message, $pairs);
+                    $message = strtr($string, $pairs);
                 } else {
                     $message = implode("\n", $message);
                 }

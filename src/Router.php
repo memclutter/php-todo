@@ -34,14 +34,26 @@ class Router
         $path = $path ? $path : $this->defaultRoute;
         $pathArray = explode('/', trim($path, '/'));
 
+        Application::getInstance()
+            ->logger
+            ->i('ROUTER', 'Requested path "' . $path . '".');
+
         foreach ($this->routes as $name => $route) {
             $this->validate($name, $route);
             $patternArray = explode('/', trim($route['pattern'], '/'));
 
             if ($this->match($pathArray, $patternArray, $params)) {
+                Application::getInstance()
+                    ->logger
+                    ->i('ROUTER', 'Found routes "' . $name . '" for path "' . $path . '".');
+
                 return $this->dispatch($name, $route, $params);
             }
         }
+
+        Application::getInstance()
+            ->logger
+            ->w('ROUTER', 'Not found routes for path "' . $path . '".');
 
         return new Response(404, "Not found path {$path}.");
     }
@@ -102,6 +114,10 @@ class Router
         $action = isset($route['action']) ? $route['action'] : 'index';
 
         if (!class_exists($controllerClass)) {
+            Application::getInstance()
+                ->logger
+                ->w('ROUTER', ['Not found controller class {class}.', '{class}' => $controllerClass]);
+
             return new Response(404, "Controller {$route['controller']} not found.");
         }
 

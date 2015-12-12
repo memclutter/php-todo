@@ -36,6 +36,10 @@ class Layout
             throw new Exception("Layout file '{$layoutFilePath}' not found.");
         }
 
+        Application::getInstance()
+            ->logger
+            ->d('LAYOUT', ['Render layout file {layout}.', '{layout}' => $layoutFilePath]);
+
         ob_start();
         extract($this->toArray());
         /** @noinspection PhpIncludeInspection */

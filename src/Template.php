@@ -22,6 +22,10 @@ class Template
             throw new Exception("Template file '{$templateFilePath}' not found.");
         }
 
+        $this->application()
+            ->logger
+            ->d('TEMPLATE', ['Render template file {file}.', '{file}' => $templateFilePath]);
+
         ob_start();
         extract($this->toArray());
         /** @noinspection PhpIncludeInspection */

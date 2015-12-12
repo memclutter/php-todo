@@ -19,6 +19,15 @@ trait ActiveRecordTrait
         $tableName = self::tableName();
         $primaryKey = self::primaryKey();
         $statement = $pdo->prepare("SELECT * FROM {$tableName} WHERE {$primaryKey} = ? LIMIT 0,1");
+
+        Application::getInstance()
+            ->logger
+            ->d('ACTIVE RECORD', [
+                'Find one record by {primary_key} {id}.',
+                '{primary_key}' => $primaryKey,
+                '{id}' => $id,
+            ]);
+
         if (!$statement->execute([$id])) {
             $errorInfo = $statement->errorInfo();
             throw new Exception("PDO [{$errorInfo[0]}]: {$errorInfo[1]}.");
@@ -41,6 +50,11 @@ trait ActiveRecordTrait
         $pdo = self::getPdo();
         $tableName = self::tableName();
         $statement = $pdo->prepare("SELECT * FROM {$tableName}");
+
+        Application::getInstance()
+            ->logger
+            ->d('ACTIVE RECORD', 'Find all records.');
+
         if (!$statement->execute()) {
             $errorInfo = $statement->errorInfo();
             throw new Exception("PDO [{$errorInfo[0]}]: {$errorInfo[2]}.");
@@ -72,12 +86,21 @@ trait ActiveRecordTrait
         $primaryKey = $this->primaryKey();
         $primaryKeyValue = $this->{$primaryKey};
 
-        if (!$primaryKeyValue) {
+        if ($primaryKeyValue) {
             $pdo = $this->getPdo();
 
             $tableName = $this->tableName();
             $statement = $pdo->prepare("DELETE FROM {$tableName} WHERE {$primaryKey} = :{$primaryKey}");
             $statement->bindValue(':' . $primaryKey, $primaryKeyValue);
+
+
+            Application::getInstance()
+                ->logger
+                ->d('ACTIVE RECORD', [
+                    'Delete record by {primary_key} {id}.',
+                    '{primary_key}' => $primaryKey,
+                    '{id}' => $primaryKeyValue,
+                ]);
 
             if (false === $statement->execute()) {
                 $errorInfo = $statement->errorInfo();
@@ -100,6 +123,10 @@ trait ActiveRecordTrait
             $statement->bindValue(':'.$field, $value);
         }
 
+        Application::getInstance()
+            ->logger
+            ->d('ACTIVE RECORD', 'Create new record.');
+
         if (!$statement->execute()) {
             $errorInfo = $statement->errorInfo();
             throw new Exception("PDO [{$errorInfo[0]}]: {$errorInfo[2]}.");
@@ -107,6 +134,11 @@ trait ActiveRecordTrait
 
         $lastInsertId = $pdo->lastInsertId();
         if ($lastInsertId) {
+
+            Application::getInstance()
+                ->logger
+                ->d('ACTIVE RECORD', ['Last auto generated insert id {id}', '{id}' => $lastInsertId]);
+
             $this->{$this->primaryKey()} = $lastInsertId;
         }
     }
@@ -134,6 +166,15 @@ trait ActiveRecordTrait
             }
         };
         $statement->bindValue(':'.$primaryKey, $primaryKeyValue);
+
+
+        Application::getInstance()
+            ->logger
+            ->d('ACTIVE RECORD', [
+                'Update record by {primary_key} {id}.',
+                '{primary_key}' => $primaryKey,
+                '{id}' => $primaryKeyValue,
+            ]);
 
         if (!$statement->execute()) {
             $errorInfo = $statement->errorInfo();

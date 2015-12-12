@@ -20,6 +20,11 @@ class Controller
         $actionMethod = $action . 'Action';
         if (!method_exists($this, $actionMethod)) {
             $controller = get_class($this);
+
+            Application::getInstance()
+                ->logger
+                ->w('CONTROLLER', ['Not found controller action method {method}.', '{method}' => $actionMethod]);
+
             return new Response(404, "Not found controller action {$controller}::{$action}.");
         }
 
@@ -38,6 +43,10 @@ class Controller
                 $callActionArguments[$reflectionParameter->getPosition()] = $params[$name];
             }
         }
+
+        Application::getInstance()
+            ->logger
+            ->i('CONTROLLER', 'Invoke controller action with arguments');
 
         $response = $reflectionMethod->invokeArgs($this, $callActionArguments);
         if (!($response instanceof Response)) {
