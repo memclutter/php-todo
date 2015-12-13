@@ -1,0 +1,25 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+
+mysql:
+  database: travis_ci_memclutter_php_todo
+  username: memclutter_php_todo
+  encodign: utf-8
+
+before_install:
+  - sudo apt-get update > /dev/null
+
+install:
+  - sudo apt-get install -y --force-yes php5-cgi php5-mysql
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+before_script:
+  - mysql -u memclutter_php_todo < data/schema.sql
+  - mysql -u memclutter_php_todo < data/migration0001.sql
+
+script: phpunit
