@@ -8,9 +8,13 @@ trait ContainerTrait
 
     public function __get($name)
     {
-        if (isset($this->_container[$name]) && ($this->_container[$name] instanceof \Closure)) {
+        if (isset($this->_container[$name])) {
             $factory = $this->_container[$name];
-            $this->_container[$name] = $factory($this);
+            if ($factory instanceof \Closure) {
+                $this->_container[$name] = $factory($this);
+            } elseif (is_callable($factory)) {
+                $this->_container[$name] = call_user_func($factory, $this);
+            }
         }
         return isset($this->_container[$name]) ? $this->_container[$name] : null;
     }

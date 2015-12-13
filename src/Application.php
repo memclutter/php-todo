@@ -14,6 +14,7 @@ use PDO;
  * @property Router $router
  * @property Layout $layout
  * @property Logger $logger
+ * @property Initializer $initializer
  */
 class Application
 {
@@ -41,10 +42,11 @@ class Application
             $this->config = Utils::arrayMerge($this->config, $environmentConfig);
         }
 
-        $this->initLogger();
-        $this->initPdo();
-        $this->initRouter();
-        $this->initLayout();
+        $this->initializer = new Initializer();
+        $this->logger = [$this->initializer, 'logger'];
+        $this->pdo = [$this->initializer, 'pdo'];
+        $this->router = [$this->initializer, 'router'];
+        $this->layout = [$this->initializer, 'layout'];
     }
 
     public function run()
@@ -53,71 +55,5 @@ class Application
         $this->request = new Request();
         $this->response = $this->router->run($this->request);
         $this->response->send();
-    }
-
-    private function initPdo()
-    {
-        $this->pdo = function(Application $application) {
-            $config = isset($application->config) && isset($application->config['pdo']) ? $application->config['pdo'] : null;
-            if (!$config) {
-                throw new Exception('Invalid pdo configuration.');
-            }
-
-            $config['username'] = isset($config['username']) ? $config['username'] : '';
-            $config['passwd'] = isset($config['passwd']) ? $config['passwd'] : '';
-            $config['options'] = isset($config['options']) ? $config['options'] : '';
-
-            return new PDO($config['dsn'], $config['username'], $config['passwd'], $config['options']);
-        };
-    }
-
-    private function initRouter()
-    {
-        $this->router = function(Application $application) {
-            $config = isset($application->config) ? $application->config : [];
-            $routes = isset($config['routes']) ? $config['routes'] : null;
-            $defaultRoute = isset($config['defaultRoute']) ? $config['defaultRoute'] : null;
-            $controllerNamespace = isset($config['controllerNamespace']) ? $config['controllerNamespace'] : null;
-
-            return new Router($routes, $defaultRoute, $controllerNamespace);
-        };
-    }
-
-    private function initLayout()
-    {
-        $this->layout = function(Application $application) {
-            $config = isset($application->config) ? $application->config : [];
-            $name = isset($config['layout']) ? $config['layout'] : null;
-
-            if (!isset($config['layoutDir'])) {
-                throw new Exception('Invalid config, missing \'layoutDir\'.');
-            }
-
-            $layoutDir = $config['layoutDir'];
-            if (!file_exists($layoutDir)) {
-                throw new Exception("Layout dir '{$layoutDir}' not found.");
-            }
-
-            $layout = new Layout($layoutDir);
-            if (!empty($name)) {
-                $layout->name = $name;
-            }
-
-            return $layout;
-        };
-    }
-
-    private function initLogger()
-    {
-        $this->logger = function(Application $application) {
-            $config = $application->config;
-
-            $targetFile = isset($config['logTargetFile']) ? $config['logTargetFile'] : null;
-            $level = isset($config['logLevel']) ? $config['logLevel'] : null;
-            $dateFormat = isset($config['logDateFormat']) ? $config['logDateFormat'] : null;
-            $lineFormat = isset($config['logLineFormat']) ? $config['logLineFormat'] : null;
-
-            return new Logger($targetFile, $level, $dateFormat, $lineFormat);
-        };
     }
 }
