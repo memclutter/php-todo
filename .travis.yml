@@ -8,7 +8,7 @@ php:
 
 mysql:
   database: travis_ci_memclutter_php_todo
-  username: memclutter_php_todo
+  username: root
   encodign: utf-8
 
 before_install:
