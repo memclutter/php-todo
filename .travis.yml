@@ -6,10 +6,8 @@ php:
   - 5.5
   - 5.6
 
-mysql:
-  database: travis_ci_memclutter_php_todo
-  username: root
-  encodign: utf-8
+services:
+  - mysql
 
 before_install:
   - sudo apt-get update > /dev/null
@@ -17,8 +15,10 @@ before_install:
 install:
   - sudo apt-get install -y --force-yes php5-cgi php5-mysql
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - composer install
 
 before_script:
+  - mysql -e "create database IF NOT EXISTS travis_ci_memclutter_php_todo" -u root
   - mysql -u root travis_ci_memclutter_php_todo < data/schema.sql
   - mysql -u root travis_ci_memclutter_php_todo < data/migration0001.sql
 
