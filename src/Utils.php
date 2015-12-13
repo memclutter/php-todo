@@ -28,9 +28,9 @@ class Utils
             foreach ($next as $k => $v) {
                 if (is_int($k)) {
                     if (isset($arr[$k])) {
-                        $res[] = $v;
+                        $arr[] = $v;
                     } else {
-                        $res[$k] = $v;
+                        $arr[$k] = $v;
                     }
                 } elseif (is_array($v) && isset($arr[$k]) && is_array($arr[$k])) {
                     $arr[$k] = self::arrayMerge($arr[$k], $v);
