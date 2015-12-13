@@ -52,6 +52,22 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
                 // expected
                 ['green', 'red', 'black'],
             ],
+            'one levels associative array' => [
+                // a
+                ['username' => 'user1', 'password' => 'secret'],
+                // b
+                ['password' => 'qwerty'],
+                // expected
+                ['username' => 'user1', 'password' => 'qwerty'],
+            ],
+            'two levels associative array' => [
+                // a
+                ['pdo' => ['dsn' => 'mysql:dbname=test;host=localhost']],
+                // b
+                ['pdo' => ['username' => 'root', 'password' => 'root']],
+                // expected
+                ['pdo' => ['dsn' => 'mysql:dbname=test;host=localhost', 'username' => 'root', 'password' => 'root']],
+            ]
         ];
     }
 }
