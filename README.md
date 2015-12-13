@@ -1,4 +1,5 @@
 # TODO 
+[![Build Status](https://travis-ci.org/memclutter/php-todo.svg?branch=master)](https://travis-ci.org/memclutter/php-todo)
 The application is written in pure PHP. Fuck frameworks! Pure PHP only!
 ## Installation
 Clone git-repository, change directory to project root and run composer install.
